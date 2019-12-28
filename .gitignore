@@ -1,0 +1,12 @@
+venv/**
+venv
+venv/*
+venv/**/*
+.idea
+venv/lib/python3.7/site-packages/tensorflow_core/python/_pywrap_tensorflow_internal.so
+venv/lib/python3.7/site-packages/tensorflow_core/python/*
+venv/lib/python3.7/site-packages/tensorflow_core/*
+venv/lib/python3.7/site-packages/*
+venv/lib/python3.7/*
+venv/lib/*
+venv/*
