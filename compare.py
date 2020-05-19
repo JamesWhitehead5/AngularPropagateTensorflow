@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 import AngularPropagateCPU as ap_normal
-import AngularPropagateTensorflowCPU as ap_tf_cpu
+import AngularPropagateTensorflow as ap_tf_cpu
 
 
 class MyTestCase(unittest.TestCase):
@@ -13,6 +13,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(True, True)
 
     def test_iffts(self):
+        print("Ifft test start")
         np.random.seed(69)
         intput_shape = (2, 2, 2)
         input = np.random.rand(*intput_shape) + 1j*np.random.rand(*intput_shape)
@@ -27,9 +28,12 @@ class MyTestCase(unittest.TestCase):
 
 
 
+
         self.assertTrue(np.allclose(np_out, tf_out))
+        print("Ifft test end")
 
     def test_simple(self):
+        print("test_simple start")
         nx = np.random.randint(3, 4)
         ny = np.random.randint(3, 4)
         input_field = np.random.rand(nx, ny)
@@ -45,8 +49,10 @@ class MyTestCase(unittest.TestCase):
         print(np.max(result_tf_cpu-result_normal))
 
         self.assertTrue(np.allclose(result_normal, result_tf_cpu, atol=1e-4))
+        print("test_simple end")
 
     def test_hard_compare(self):
+        print("test_hard_compare start")
         np.random.seed(69)
         input_shape = (np.random.randint(100, 200), np.random.randint(100, 200))
         input_field = np.random.rand(*input_shape) + 1j*np.random.rand(*input_shape)
@@ -62,9 +68,11 @@ class MyTestCase(unittest.TestCase):
         print(np.max(result_tf_cpu - result_normal))
 
         self.assertTrue(np.allclose(result_normal, result_tf_cpu, atol=1e-4))
+        print("test_hard_compare end")
 
 
     def test_compare_speed(self):
+        print("test_compare_speed start")
         np.random.seed(69)
         input_shape = (2**7, 2**7)
         input_field = np.random.rand(*input_shape) + 1j * np.random.rand(*input_shape)
@@ -92,13 +100,17 @@ class MyTestCase(unittest.TestCase):
         print("Time for numpy implementation: {}".format(t_1-t_0))
         print("Time for tensorflow implementation: {}".format(t_2-t_1))
 
-    def test_tensor_vector_multiply(self):
-        x = tf.constant([[[1], [1]], [[1], [1]], [[1], [1]],])
-        print(x.shape)
-        b = tf.constant([[[1,2,3]]])
-        print(x.numpy())
-        print((tf.multiply(x, b)).numpy())
-        tf.broadcast_to(b, (0, 1))
+        print("test_compare_speed end")
+
+    # def test_tensor_vector_multiply(self):
+    #     print("test_tensor_vector_multiply start")
+    #     x = tf.Variable([[[1], [1]], [[1], [1]], [[1], [1]], ], trainable=False)
+    #     print(x.shape)
+    #     b = tf.Variable([[[1, 2, 3]]], trainable=False)
+    #     print(x.numpy())
+    #     print((tf.multiply(x, b)).numpy())
+    #     tf.broadcast_to(b, (0, 1))
+    #     print("test_tensor_vector_multiply end")
 
 if __name__ == '__main__':
     unittest.main()

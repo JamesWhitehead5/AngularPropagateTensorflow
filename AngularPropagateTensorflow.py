@@ -30,8 +30,8 @@ def propagate_angular(field: np.ndarray, k: float, z_list: List[float], dx: floa
     n_x, n_y = field.shape
 
     # define spatial frequency vectors
-    k_x = tf.constant(np.fft.fftfreq(n=n_x, d=dx) * 2 * np.pi, dtype=tf.complex128)
-    k_y = tf.constant(np.fft.fftfreq(n=n_y, d=dy) * 2 * np.pi, dtype=tf.complex128)
+    k_x = tf.Variable(np.fft.fftfreq(n=n_x, d=dx) * 2 * np.pi, dtype=tf.complex128, trainable=False)
+    k_y = tf.Variable(np.fft.fftfreq(n=n_y, d=dy) * 2 * np.pi, dtype=tf.complex128, trainable=False)
     k_Y, k_X = tf.meshgrid(k_y, k_x, indexing='xy')
 
     # fourier transform the input field
