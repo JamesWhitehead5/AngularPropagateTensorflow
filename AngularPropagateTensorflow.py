@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
+
 from typing import List, Union
 
 
@@ -58,7 +59,7 @@ def propagate_angular(field: np.ndarray, k: float, z_list: List[float], dx: floa
     return E_prop.numpy()
 
 
-def propagate_angular_padded(field, k, z_list, dx, dy):
+def propagate_angular_padded(field, k, z_list, dx, dy) -> np.ndarray:
     """Pads the field with n-1 zeros to remove boundary reflections"""
 
     _assert_2d(field)
