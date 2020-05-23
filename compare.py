@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 import AngularPropagateCPU as ap_normal
-import AngularPropagateTensorflow as ap_tf_cpu
+import AngularPropagateTensorflow as ap_tf
 
 import matplotlib.pyplot as plt
 
@@ -37,15 +37,15 @@ class AngularPropTests(unittest.TestCase):
         ny = np.random.randint(3, 4)
         input_field = np.random.rand(nx, ny)
 
-        zs = [0, 1.5]
+        zs = [0., 1.5]
         k = 1.
         dx = 0.001
         dy = 0.001
 
         result_normal = ap_normal.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
-        result_tf_cpu = ap_tf_cpu.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
+        result_tf_cpu = ap_tf.propagate_angular(field=tf.Variable(np.copy(input_field), dtype=tf.complex128), k=k, z_list=zs, dx=dx, dy=dy)
 
-        print(np.max(result_tf_cpu-result_normal))
+
 
         self.assertTrue(np.allclose(result_normal, result_tf_cpu, atol=1e-4))
 
@@ -60,7 +60,7 @@ class AngularPropTests(unittest.TestCase):
         dy = np.random.rand(1)[0]
 
         result_normal = ap_normal.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
-        result_tf_cpu = ap_tf_cpu.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
+        result_tf_cpu = ap_tf.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
 
         print(np.max(result_tf_cpu - result_normal))
 
@@ -84,7 +84,7 @@ class AngularPropTests(unittest.TestCase):
         print("Completed numpy implementation")
 
         print("Started tensorflow implementation")
-        result_tf_cpu = ap_tf_cpu.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
+        result_tf_cpu = ap_tf.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
         t_2 = time.time()
         print("Completed tensorflow implementation")
 
@@ -117,7 +117,7 @@ class AngularPropTests(unittest.TestCase):
             t_0 = time.time()
             result_normal = ap_normal.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
             t_1 = time.time()
-            result_tf_cpu = ap_tf_cpu.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
+            result_tf_cpu = ap_tf.propagate_angular(field=np.copy(input_field), k=k, z_list=zs, dx=dx, dy=dy)
             t_2 = time.time()
             self.assertTrue(np.allclose(result_normal, result_tf_cpu, atol=1e-4))
             print("Maximum error: {}".format(np.max(result_tf_cpu - result_normal)))
