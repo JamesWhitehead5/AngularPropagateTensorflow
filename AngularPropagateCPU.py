@@ -22,6 +22,9 @@ def propagate_angular(field, k, z_list, dx, dy):
             The third dimension is the same as the length of z_list
     """
 
+
+
+
     # Check parameter data types
     number_type = (float, int, complex)
     _assert_2d(field)
@@ -33,10 +36,11 @@ def propagate_angular(field, k, z_list, dx, dy):
     # shape of the input field
     n_x, n_y = field.shape
 
-    # define spaxial frequency vectors
+    # define spatial frequency vectors
     k_x = np.fft.fftfreq(n=n_x, d=dx) * 2 * np.pi
     k_y = np.fft.fftfreq(n=n_y, d=dy) * 2 * np.pi
     k_Y, k_X = np.meshgrid(k_y, k_x, indexing='xy')
+
 
     # instantiate the total field matrix (3D)
     field_matrix = np.zeros(field.shape + (len(z_list),), dtype=complex)
@@ -44,8 +48,10 @@ def propagate_angular(field, k, z_list, dx, dy):
     # fourier transform the input field
     E_in_k = np.fft.fft2(field)
 
+
     # define wavenumber for each wavevector in the direction of propagation
     k_z = np.sqrt(0j + k ** 2 - k_X ** 2 - k_Y ** 2)
+
 
     # broadcast E_in_k along the 3rd dimenstion
     E_k = np.repeat(E_in_k[:, :, np.newaxis], len(z_list), axis=2)
@@ -53,11 +59,35 @@ def propagate_angular(field, k, z_list, dx, dy):
     # broadcast k_z into 3rd dimension
     k_Z = np.repeat(k_z[:, :, np.newaxis], len(z_list), axis=2)
 
+
+
     phase = k_Z * z_list
+
+
+    # phase_temp = np.transpose(phase, axes=[2, 0, 1])
+
+
     E_k_prop = E_k * np.exp(1j * phase)
     E_prop = np.fft.ifft2(E_k_prop, axes=(0, 1))
-    #E_prop = E_k_prop
-    return E_prop
+
+
+    DEBUG = False
+    if DEBUG:
+        import pickle
+        debug = {}
+        debug["k_X"] = k_X
+        debug["k_Y"] = k_Y
+        debug["E_in_k"] = E_in_k
+        debug["k_Z"] = k_Z
+        debug['phase'] = phase
+        debug['E_k_prop'] = E_k_prop
+        debug['field'] = field
+        debug['E_prop'] = E_prop
+
+        pickle.dump(debug, open("np.p", "wb"))
+
+
+    return np.transpose(E_prop, axes=[2, 0, 1])
 
 
 def propagate_angular_padded(field, k, z_list, dx, dy):
@@ -72,6 +102,6 @@ def propagate_angular_padded(field, k, z_list, dx, dy):
     padded_field[pad_x:-pad_x, pad_y:-pad_y] = field
 
     E_prop_padded = propagate_angular(padded_field, k, z_list, dx, dy)
-    E_prop = E_prop_padded[pad_x:-pad_x, pad_y:-pad_y, :]
+    E_prop = E_prop_padded[:, pad_x:-pad_x, pad_y:-pad_y]
 
     return E_prop
