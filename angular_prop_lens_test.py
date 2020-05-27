@@ -20,7 +20,7 @@ y = tf.linspace(tf.constant(-ny/2., dtype=tf.float64), ny/2., num=ny)*dy
 
 Y, X = tf.meshgrid(y, x, indexing='xy')
 
-phi = k*tf.sqrt(f**2 - X**2 - Y**2)
+phi = -k*tf.sqrt(f**2 + X**2 + Y**2)
 
 field = tf.complex(tf.cos(phi), tf.sin(phi))
 
