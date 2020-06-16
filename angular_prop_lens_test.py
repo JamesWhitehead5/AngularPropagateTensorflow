@@ -34,25 +34,32 @@ np_near, np_perfect, np_far = planes_np
 
 
 plt.imshow(phi.numpy() % (2.*np.pi))
+plt.colorbar()
 plt.show()
 
 plt.imshow(tf.abs(np_near)**2)
+plt.colorbar()
 plt.show()
 
 plt.imshow(tf.abs(np_perfect)**2)
+plt.colorbar()
 plt.show()
 
 plt.imshow(tf.abs(np_far)**2)
+plt.colorbar()
 plt.show()
 
 
 
 plt.imshow(tf.abs(tf_near)**2)
+plt.colorbar()
 plt.show()
 
 plt.imshow(tf.abs(tf_perfect)**2)
+plt.colorbar()
 plt.show()
 
 plt.imshow(tf.abs(tf_far)**2)
+plt.colorbar()
 plt.show()
-
+plt.show()
