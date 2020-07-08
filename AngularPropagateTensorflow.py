@@ -213,10 +213,13 @@ def _pad(field, pad_factor=1.):
 
 
 def _unpad(field, pad_factor=1.):
-    *_, n_x, n_y = np.shape(field)
-    pad_x = int(n_x * pad_factor / (2 + 2 * pad_factor))
-    pad_y = int(n_y * pad_factor / (2 + 2 * pad_factor))
-    return field[:, pad_x:-pad_x - 1, pad_y:-pad_y - 1]
+    if pad_factor == 0.:
+        return field
+    else:
+        *_, n_x, n_y = np.shape(field)
+        pad_x = int(n_x * pad_factor / (2 + 2 * pad_factor))
+        pad_y = int(n_y * pad_factor / (2 + 2 * pad_factor))
+        return field[:, pad_x:-pad_x, pad_y:-pad_y]
 
 
 def propagate_padded(propagator, field, k, z_list, dx, dy, pad_factor=1.):
