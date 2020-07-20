@@ -39,7 +39,7 @@ Example:
           propagator=ap_tf.propagate_angular, # propagate using normal angular propagation
           field=complex_e_field,
           k=k,
-          z_list=[target_focal_length, ],
+          z_list=propagated_plane_distances,
           dx=dd,
           dy=dd,
           pad_factor=5.,
