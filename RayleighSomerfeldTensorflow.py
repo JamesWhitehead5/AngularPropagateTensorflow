@@ -8,14 +8,14 @@ import numpy as np
 # `dd` the pitch of the x, y sampling grid
 # `distance` to be propagated
 # `p1` is a 3-tuple of the propagation coordinate in 3D. Origin is at the center of the field
-def propagate(starting_field, dd, wavenumber, p1, dtype):
-    e_x = tf.complex(starting_field[:, :, 0], starting_field[:, :, 1], dtype=dtype['complex'])
-    e_y = tf.complex(starting_field[:, :, 2], starting_field[:, :, 3], dtype=dtype['complex'])
-    e_z = tf.complex(starting_field[:, :, 4], starting_field[:, :, 5], dtype=dtype['complex'])
+def propagate(field, dd, k, p1, dtype):
+    e_x = tf.complex(field[:, :, 0], field[:, :, 1], dtype=dtype['complex'])
+    e_y = tf.complex(field[:, :, 2], field[:, :, 3], dtype=dtype['complex'])
+    e_z = tf.complex(field[:, :, 4], field[:, :, 5], dtype=dtype['complex'])
 
-    e_x_prop = propagate_scalar(e_x, dd, wavenumber, p1, dtype)
-    e_y_prop = propagate_scalar(e_y, dd, wavenumber, p1, dtype)
-    e_z_prop = propagate_scalar(e_z, dd, wavenumber, p1, dtype)
+    e_x_prop = propagate_scalar(e_x, dd, k, p1, dtype)
+    e_y_prop = propagate_scalar(e_y, dd, k, p1, dtype)
+    e_z_prop = propagate_scalar(e_z, dd, k, p1, dtype)
 
     propagated = tf.stack([
         tf.real(e_x_prop),
@@ -42,8 +42,8 @@ def complex_mul(real1, image1, real2, image2):
 # `dd` the pitch of the x, y sampling grid
 # `distance` to be propagated
 # `p1` is a 3-tuple of the propagation coordinate in 3D. Origin is at the center of the field
-def propagate_scalar(starting_field, dd, k, p1, dtype):
-    nx, ny = tf.shape(starting_field)
+def propagate_scalar(field, dd, k, p1, dtype):
+    nx, ny = tf.shape(field)
     nx = int(nx)
     ny = int(ny)
     x = (tf.range(0, nx, dtype=dtype['real']) - nx / 2) * dd
@@ -62,7 +62,7 @@ def propagate_scalar(starting_field, dd, k, p1, dtype):
     # is equivalent to cosine of angle r01 make with normal
     cos_r01 = r01_z / abs_r01
 
-    u_real, u_imag = split_complex(starting_field)
+    u_real, u_imag = split_complex(field)
 
     result_image = dd**2 * k / (2. * np.pi) * tf.reduce_sum(
         (u_imag * tf.cos(k*abs_r01) + u_real * tf.sin(k * abs_r01)) * cos_r01 / abs_r01
