@@ -42,12 +42,12 @@ def complex_mul(real1, image1, real2, image2):
 # `dd` the pitch of the x, y sampling grid
 # `distance` to be propagated
 # `p1` is a 3-tuple of the propagation coordinate in 3D. Origin is at the center of the field
+@tf.function
 def propagate_scalar(field, dd, k, p1, dtype):
-    nx, ny = tf.shape(field)
-    nx = int(nx)
-    ny = int(ny)
-    x = (tf.range(0, nx, dtype=dtype['real']) - nx / 2) * dd
-    y = (tf.range(0, ny, dtype=dtype['real']) - ny / 2) * dd
+    nx = int(tf.shape(field)[0])
+    ny = int(tf.shape(field)[1])
+    x = (tf.range(0, nx, dtype=dtype['real']) - tf.cast(nx / 2, dtype=dtype['real'])) * dd
+    y = (tf.range(0, ny, dtype=dtype['real']) - tf.cast(ny / 2, dtype=dtype['real'])) * dd
 
     yy, xx = tf.meshgrid(y, x)
 
