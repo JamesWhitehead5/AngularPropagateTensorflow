@@ -14,8 +14,8 @@ def propagate(starting_field, dd, wavenumber, p1, dtype):
     e_z = tf.complex(starting_field[:, :, 4], starting_field[:, :, 5], dtype=dtype['complex'])
 
     e_x_prop = propagate_scalar(e_x, dd, wavenumber, p1, dtype)
-    e_y_prop = propagate_scalar(e_x, dd, wavenumber, p1, dtype)
-    e_z_prop = propagate_scalar(e_x, dd, wavenumber, p1, dtype)
+    e_y_prop = propagate_scalar(e_y, dd, wavenumber, p1, dtype)
+    e_z_prop = propagate_scalar(e_z, dd, wavenumber, p1, dtype)
 
     propagated = tf.stack([
         tf.real(e_x_prop),
