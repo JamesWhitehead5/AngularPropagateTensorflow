@@ -39,16 +39,12 @@ def propagate_angular(field: tf.Variable, k: float, z_list: List[float], dx: flo
             The 1st, 2nd and 3rd dimensions correspond to the x, y, and z dimensions.
             The third dimension is the same as the length of z_list
     """
-
     if field.dtype == tf.complex128:
         float_type = tf.float64
     else:
         float_type = tf.float32
 
-
     z_list = tf.constant(z_list, dtype=float_type)
-
-    # shape of the input field
 
     # shape of the input field
     n_x, n_y = field.shape
@@ -136,7 +132,11 @@ def propagate_angular_bw_limited(field, k, z_list, dx, dy,):
     k_X, k_Y = get_frequencies(n_x, n_y, dx, dy, float_type)
 
     # define wavenumber for each wavevector in the direction of propagation
-    k_tensor = k * tf.ones(dtype=float_type, shape=field.shape)
+    # k_tensor = k * tf.ones(dtype=float_type, shape=field.shape)
+    k_tensor = tf.fill(
+        field.shape, k
+    )
+
     kz_squared = tf.cast(k_tensor ** 2 - k_X ** 2 - k_Y ** 2, dtype=field.dtype)
     k_z = tf.sqrt(kz_squared)
 
