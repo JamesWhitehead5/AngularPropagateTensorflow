@@ -62,7 +62,7 @@ def propagate_scalar(starting_field, dd, k, p1, dtype):
     # is equivalent to cosine of angle r01 make with normal
     cos_r01 = r01_z / abs_r01
 
-    u_real, u_imag = split_complex(field)
+    u_real, u_imag = split_complex(starting_field)
 
     result_image = dd**2 * k / (2. * np.pi) * tf.reduce_sum(
         (u_imag * tf.cos(k*abs_r01) + u_real * tf.sin(k * abs_r01)) * cos_r01 / abs_r01
