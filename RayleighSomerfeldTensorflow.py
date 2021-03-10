@@ -46,8 +46,8 @@ def propagate_scalar(starting_field, dd, k, p1, dtype):
     nx, ny = tf.shape(starting_field)
     nx = int(nx)
     ny = int(ny)
-    x = (tf.range(0, nx, dtype=dtype['real']) - nx / 2) * dd
-    y = (tf.range(0, ny, dtype=dtype['real']) - ny / 2) * dd
+    x = (tf.range(0, nx, dtype=dtype['real']) - nx / 2 + 0.5) * dd
+    y = (tf.range(0, ny, dtype=dtype['real']) - ny / 2 + 0.5) * dd
 
     yy, xx = tf.meshgrid(y, x)
 
@@ -73,6 +73,22 @@ def propagate_scalar(starting_field, dd, k, p1, dtype):
     )
 
     return result_real, result_image
+
+def propagate_scalar_total(starting_field, dd, k, z, dtype):
+    def get_total_field(xx, yy):
+        return propagate_scalar(starting_field, dd, k, (xx, yy, z), dtype)
+
+    get_total_field = np.vectorize(get_total_field)
+
+    n_x, n_y = tf.shape(starting_field)
+    n_x = int(n_x)
+    n_y = int(n_y)
+
+    x = np.linspace(-dd * n_x / 2., dd * n_x / 2., n_x)
+    y = np.linspace(-dd * n_y / 2., dd * n_y / 2., n_y)
+    yy, xx = tf.meshgrid(y, x)
+
+    return tf.complex(*get_total_field(xx, yy))
 
 
 def propagate_scalar_test():
