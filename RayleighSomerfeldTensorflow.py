@@ -43,8 +43,8 @@ def complex_mul(real1, image1, real2, image2):
 # `distance` to be propagated
 # `p1` is a 3-tuple of the propagation coordinate in 3D. Origin is at the center of the field
 def propagate_scalar(starting_field, dd, k, p1, dtype):
-    nx = int(tf.shape(starting_field)[0])
-    ny = int(tf.shape(starting_field)[1])
+    nx = tf.cast(tf.shape(starting_field)[0], dtype=dtype['real'])
+    ny = tf.cast(tf.shape(starting_field)[1], dtype=dtype['real'])
 
     x = (tf.range(0, nx, dtype=dtype['real']) - nx / 2 + 0.5) * dd
     y = (tf.range(0, ny, dtype=dtype['real']) - ny / 2 + 0.5) * dd
