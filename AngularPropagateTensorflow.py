@@ -134,7 +134,7 @@ def propagate_angular_bw_limited(field, k, z_list, dx, dy,):
     # define wavenumber for each wavevector in the direction of propagation
     # k_tensor = k * tf.ones(dtype=float_type, shape=field.shape)
     k_tensor = tf.fill(
-        field.shape, k
+        field.shape, tf.cast(k, dtype=float_type)
     )
 
     kz_squared = tf.cast(k_tensor ** 2 - k_X ** 2 - k_Y ** 2, dtype=field.dtype)
